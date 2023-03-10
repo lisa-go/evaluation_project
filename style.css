@@ -1,43 +1,107 @@
-.app {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: fit-content;
-  padding: 10px;
-  text-align: center;
-  gap: 10px;
-  align-items: stretch;
+:root {
+  --color-tan: #e6e2d3;
+  --color-ivory: #f0f0f0;
+  --color-green: #4caf50;
+  --color-red: #c94c4c;
+  --color-blue: #008cba;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 html {
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+
+body {
+  width: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
 }
 
 .form {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 10px;
 }
 
-.todo-list {
-  padding: 0;
+.form input {
+  font-size: 1rem;
+  padding: 2px;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
+.submit-btn {
+  padding: 0 10px;
+  background-color: var(--color-blue);
+  color: white;
+  border-radius: 4px;
+  border: none;
+}
+
+#pending-container,
+#complete-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--color-ivory);
+  border: 1px solid var(--color-tan);
+  width: 40%;
+  min-width: 300px;
+  border-radius: 8px;
+  min-height: 450px;
+}
+
+h2 {
+  text-align: left;
+}
+
+.todo-list,
+.completed-list {
+  flex: 1;
   margin: 0;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   list-style-type: none;
   gap: 10px;
 }
 
-.todo-list li {
+.todo-list li,
+.completed-list li {
   display: flex;
   justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
+  gap: 5px;
 }
-.todo-list li span {
+
+.todo-list li span,
+.completed-list li span {
   flex-grow: 1;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+}
+
+.todo-list li input,
+.completed-list li input {
+  flex-grow: 1;
 }
 
 .hidden {
@@ -46,4 +110,44 @@ html {
 
 .show {
   display: block;
+}
+
+#list-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+li {
+  background-color: var(--color-tan);
+}
+
+button {
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  color: white;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: var(--color-blue);
+}
+
+.delete-btn {
+  background-color: var(--color-red);
+}
+
+.switch-btn {
+  background-color: var(--color-green);
+  width: 25px;
+}
+
+button:hover {
+  filter: brightness(110%);
 }

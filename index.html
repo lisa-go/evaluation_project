@@ -9,13 +9,19 @@
   </head>
   <body>
     <div class="app">
-      <h1>TodoList</h1>
+      <h1>Todo List</h1>
       <div class="form">
-        <input class="input" /><button class="submit-btn">submit</button>
+        <input class="input" /><button class="submit-btn">Submit</button>
       </div>
-      <div>
-        <ul class="todo-list"></ul>
-        <ul class="completed-list"></ul>
+      <div id="list-container">
+        <div id="pending-container">
+          <h2>Pending Tasks</h2>
+          <ul class="todo-list"></ul>
+        </div>
+        <div id="complete-container">
+          <h2>Completed Tasks</h2>
+          <ul class="completed-list"></ul>
+        </div>
       </div>
     </div>
 

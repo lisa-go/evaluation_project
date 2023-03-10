@@ -1,20 +1,3 @@
-//console.log("hello world")
-
-/* 
-  client side
-    template: static template
-    logic(js): MVC(model, view, controller): used to server side technology, single page application
-        model: prepare/manage data,
-        view: manage view(DOM),
-        controller: business logic, event bindind/handling
-
-  server side
-    json-server
-    CRUD: create(post), read(get), update(put, patch), delete(delete)
-
-
-*/
-
 function myFetch(url, method, ...args) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
@@ -58,18 +41,10 @@ const APIs = (() => {
   return { createTodo, changeTodo, deleteTodo, getTodos };
 })();
 
-//IIFE
-//todos
-/* 
-    hashMap: faster to search
-    array: easier to iterate, has order
-
-
-*/
 const Model = (() => {
   class State {
-    #todos; //private field
-    #onChange; //function, will be called when setter function todos is called
+    #todos;
+    #onChange;
     constructor() {
       this.#todos = [];
     }
@@ -77,14 +52,11 @@ const Model = (() => {
       return this.#todos;
     }
     set todos(newTodos) {
-      // reassign value
-      console.log('setter function');
       this.#todos = newTodos;
-      this.#onChange?.(); // rendering
+      this.#onChange?.();
     }
 
     subscribe(callback) {
-      //subscribe to the change of the state todos
       this.#onChange = callback;
     }
   }
@@ -99,27 +71,62 @@ const Model = (() => {
 })();
 
 const View = (() => {
+  const listContainerEl = document.querySelector('#list-container');
   const todolistEl = document.querySelector('.todo-list');
+  const completedListEl = document.querySelector('.completed-list');
   const submitBtnEl = document.querySelector('.submit-btn');
   const inputEl = document.querySelector('.input');
 
   const renderTodos = (todos) => {
     let todosTemplate = '';
-    todos.forEach((todo) => {
-      const liTemplate = `<li><span>${todo.content}</span><input type="text" value="${todo.content}" class="edit-input hidden" id="${todo.id}"/><button class="edit-btn" id="${todo.id}">edit</button><button class="delete-btn" id="${todo.id}">delete</button></li>`;
-      todosTemplate += liTemplate;
-    });
-    if (todos.length === 0) {
+    todos
+      .filter((todo) => todo.completed === false)
+      .forEach((todo) => {
+        const liTemplate =
+          `<li><span>${todo.content}</span>` +
+          `<input type="text" value="${todo.content}" class="edit-input hidden" id="${todo.id}"/>` +
+          `<button class="edit-btn" id="${todo.id}">Edit</button>` +
+          `<button class="delete-btn" id="${todo.id}">Delete</button>` +
+          `<button class="switch-btn" id="${todo.id}">></button></li>`;
+        todosTemplate += liTemplate;
+      });
+    if (todos.filter((todo) => todo.completed === false).length === 0) {
       todosTemplate = '<h4>no task to display!</h4>';
     }
     todolistEl.innerHTML = todosTemplate;
+  };
+
+  const renderCompleted = (todos) => {
+    let todosTemplate = '';
+    todos
+      .filter((todo) => todo.completed === true)
+      .forEach((todo) => {
+        const liTemplate =
+          `<li><button class="switch-btn" id="${todo.id}"><</button>` +
+          `<span>${todo.content}</span><input type="text" value="${todo.content}" class="edit-input hidden" id="${todo.id}"/>` +
+          `<button class="edit-btn" id="${todo.id}">Edit</button>` +
+          `<button class="delete-btn" id="${todo.id}">Delete</button></li>`;
+        todosTemplate += liTemplate;
+      });
+    if (todos.filter((todo) => todo.completed === true).length === 0) {
+      todosTemplate = '<h4>no task to display!</h4>';
+    }
+    completedListEl.innerHTML = todosTemplate;
   };
 
   const clearInput = () => {
     inputEl.value = '';
   };
 
-  return { renderTodos, submitBtnEl, inputEl, clearInput, todolistEl };
+  return {
+    renderTodos,
+    renderCompleted,
+    submitBtnEl,
+    inputEl,
+    clearInput,
+    todolistEl,
+    listContainerEl,
+  };
 })();
 
 const Controller = ((view, model) => {
@@ -133,22 +140,21 @@ const Controller = ((view, model) => {
 
   const handleSubmit = () => {
     view.submitBtnEl.addEventListener('click', (event) => {
-      const inputValue = view.inputEl.value;
+      const inputValue = view.inputEl.value.trim();
+      if (inputValue === '') return;
       model
         .createTodo({ content: inputValue, completed: false })
         .then((data) => {
           state.todos = [data, ...state.todos];
           view.clearInput();
-          console.log(state);
         });
     });
   };
 
   const handleDelete = () => {
-    view.todolistEl.addEventListener('click', (event) => {
+    view.listContainerEl.addEventListener('click', (event) => {
       if (event.target.className === 'delete-btn') {
         const id = event.target.id;
-        console.log('id', typeof id);
         model.deleteTodo(+id).then((data) => {
           state.todos = state.todos.filter((todo) => todo.id !== +id);
         });
@@ -157,11 +163,11 @@ const Controller = ((view, model) => {
   };
 
   const handleEdit = () => {
-    view.todolistEl.addEventListener('click', (event) => {
+    view.listContainerEl.addEventListener('click', (event) => {
+      let id = event.target.id;
       if (event.target.className === 'edit-btn') {
         const id = event.target.id;
         event.target.previousElementSibling.classList.toggle('show');
-
         if (
           event.target.previousElementSibling.classList.contains('show') ===
           true
@@ -174,13 +180,16 @@ const Controller = ((view, model) => {
 
           var body;
           myFetch('http://localhost:3000/todos/' + event.target.id)
-            .then(
-              (data) => (
-                (body = data),
-                (body.content = event.target.previousElementSibling.value)
-              )
-            )
+            .then((data) => {
+              body = data;
+            })
+            .catch((err) => {
+              if (event.target.previousElementSibling.value == data.content) {
+                return Promise.reject();
+              }
+            })
             .then((res) => {
+              body.content = event.target.previousElementSibling.value;
               model.changeTodo(+id, body);
             })
             .then((data) => {
@@ -193,18 +202,43 @@ const Controller = ((view, model) => {
     });
   };
 
+  const handleSwitch = () => {
+    view.listContainerEl.addEventListener('click', (event) => {
+      if (event.target.className === 'switch-btn') {
+        const id = event.target.id;
+
+        var body;
+        myFetch('http://localhost:3000/todos/' + event.target.id)
+          .then((data) => {
+            body = data;
+            body.completed = !data.completed;
+          })
+          .then((res) => {
+            model.changeTodo(+id, body);
+          })
+          .then((data) => {
+            let copy = [...state.todos];
+            copy.splice(-body.id, 1, body);
+            state.todos = [...copy];
+          });
+      }
+    });
+  };
+
   const bootstrap = () => {
     init();
     handleSubmit();
     handleDelete();
     handleEdit();
+    handleSwitch();
     state.subscribe(() => {
       view.renderTodos(state.todos);
+      view.renderCompleted(state.todos);
     });
   };
   return {
     bootstrap,
   };
-})(View, Model); //ViewModel
+})(View, Model);
 
 Controller.bootstrap();
