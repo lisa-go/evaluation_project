@@ -1,5 +1,7 @@
 // Siying Goh (Lisa)
 
+// I wasn't able to properly implement the button icons in time so I decided to go without it.
+
 function myFetch(url, method, ...args) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
