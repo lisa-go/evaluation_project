@@ -1,3 +1,5 @@
+// Siying Goh (Lisa)
+
 function myFetch(url, method, ...args) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
