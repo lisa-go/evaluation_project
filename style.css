@@ -1,43 +1,49 @@
-.app{
+.app {
   display: flex;
   flex-direction: column;
   border: 1px solid black;
   border-radius: 5px;
   width: fit-content;
-  padding:10px;
+  padding: 10px;
   text-align: center;
-  gap:10px;
+  gap: 10px;
   align-items: stretch;
-
 }
 
-html{
+html {
   display: flex;
   justify-content: center;
 }
 
-.form{
+.form {
   display: flex;
   flex-direction: row;
-  gap:10px;
+  gap: 10px;
 }
 
-.todo-list{
-  padding:0;
+.todo-list {
+  padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
   list-style-type: none;
-  gap:10px;
+  gap: 10px;
 }
 
-.todo-list li{
+.todo-list li {
   display: flex;
   justify-content: space-between;
 }
-.todo-list li span{
+.todo-list li span {
   flex-grow: 1;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
+.hidden {
+  display: none;
+}
 
+.show {
+  display: block;
+}

@@ -1,44 +1,24 @@
 {
   "todos": [
     {
-      "content": "sdsd",
+      "content": "1",
+      "completed": false,
       "id": 1
     },
     {
-      "content": "sdf",
+      "content": "2",
+      "completed": false,
       "id": 2
     },
     {
-      "content": "aaaaa",
+      "content": "3333333",
+      "completed": false,
       "id": 3
     },
     {
-      "content": "h",
+      "content": "4",
+      "completed": false,
       "id": 4
-    },
-    {
-      "content": "mb,mn",
-      "id": 5
-    },
-    {
-      "content": "gg",
-      "id": 6
-    },
-    {
-      "content": "xxxx",
-      "id": 7
-    },
-    {
-      "content": "zzz",
-      "id": 8
-    },
-    {
-      "content": "aaa",
-      "id": 9
-    },
-    {
-      "content": "q",
-      "id": 10
     }
   ]
 }
